@@ -18,21 +18,31 @@ public class ClientTest {
 
   @Test
   public void equals_returnsTrueIfNamesAretheSame() {
-    Client firstClient = new Client("Betty Sue");
-    Client secondClient = new Client("Betty Sue");
+    Client firstClient = new Client("Betty Sue", 1);
+    Client secondClient = new Client("Betty Sue", 1);
     assertTrue(firstClient.equals(secondClient));
   }
 
   @Test
   public void save_savesIntoDatabase_true() {
-    Client myClient = new Client("Betty Sue");
+    Client myClient = new Client("Betty Sue", 1);
     myClient.save();
     assertTrue(Client.all().get(0).equals(myClient));
   }
 
   @Test
+public void save_savesStylistIdIntoDB_true() {
+  Stylist myStylist = new Stylist("Cyril Turnstone", "Cuts");
+  myStylist.save();
+  Client myClient = new Client("GI Jane", myStylist.getId());
+  myClient.save();
+  Client savedClient = Client.find(myClient.getId());
+  assertEquals(savedClient.getStylistId(), myStylist.getId());
+}
+
+  @Test
   public void find_findClientInDatabase_true() {
-    Client myClient = new Client("Betty Sue");
+    Client myClient = new Client("Betty Sue", 1);
     myClient.save();
     Client savedClient = Client.find(myClient.getId());
     assertTrue(myClient.equals(savedClient));
@@ -40,16 +50,16 @@ public class ClientTest {
 
    @Test
    public void update_updateClientNameToNewName() {
-     Client myClient = new Client("Patrick Stewart");
+     Client myClient = new Client("Patrick Stewart", 1);
      myClient.save();
-     Client updateClient = new Client("Tyrese Gibson");
+     Client updateClient = new Client("Tyrese Gibson", 1);
     myClient.update(updateClient.getId(), updateClient.getName());
     assertTrue(updateClient.getName() == "Tyrese Gibson");
   }
 
  @Test
  public void delete_deleteClientFromDatabase() {
-   Client myClient = new Client("Patrick Stewart");
+   Client myClient = new Client("Patrick Stewart", 1);
    myClient.save();
    myClient.delete();
    assertEquals(0, Client.all().size());

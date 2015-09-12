@@ -91,4 +91,14 @@ public boolean equals(Object otherStylist){
       .executeUpdate();
    }
  }
+
+
+ public List<Client> getClients() {
+  try (Connection con = DB.sql2o.open()) {
+    String sql = "Select * FROM clients WHERE stylistId = :id";
+    return con.createQuery(sql)
+    .addParameter("id", id)
+    .executeAndFetch(Client.class);
+  }
+ }
 }

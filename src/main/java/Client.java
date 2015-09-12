@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class Client {
   private int id;
   private String name;
+  private int stylistId;
 
 
 
@@ -17,8 +18,13 @@ public class Client {
     return name;
   }
 
-  public Client(String name) {
+  public int getStylistId() {
+    return stylistId;
+  }
+
+  public Client(String name, int stylistId) {
     this.name = name;
+    this.stylistId = stylistId;
   }
 
   @Override
@@ -27,15 +33,18 @@ public boolean equals(Object otherClient){
     return false;
   } else {
     Client newClient = (Client) otherClient;
-    return this.getName().equals(newClient.getName());
+    return this.getName().equals(newClient.getName()) &&
+            this.getId() == newClient.getId() &&
+            this.getStylistId() == newClient.getStylistId();
   }
 }
 
   public void save() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO clients (name) VALUES (:name);";
+      String sql = "INSERT INTO clients (name, stylistId) VALUES (:name, :stylistId);";
       this.id = (int) con.createQuery(sql, true)
       .addParameter("name", this.name)
+      .addParameter("stylistId", this.stylistId)
       .executeUpdate()
       .getKey();
     }
