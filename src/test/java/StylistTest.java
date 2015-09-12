@@ -55,4 +55,12 @@ public class StylistTest {
    myStylist.updateStylistSpec(updateStylistSpec.getId(), updateStylistSpec.getSpecialization());
    assertTrue(updateStylistSpec.getSpecialization() == "Coloring");
  }
+
+ @Test
+ public void delete_deleteStylistFromDatabase() {
+   Stylist myStylist = new Stylist("Hairy Potter", "Coloring");
+   myStylist.save();
+   myStylist.delete();
+   assertEquals(0, Stylist.all().size());
+ }
 }
